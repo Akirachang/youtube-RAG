@@ -13,8 +13,8 @@ logger = get_logger(__name__)
 
 
 def main():
-    channel_handle: str = "@mkbhd"
-    max_videos: int = 20
+    channel_handle: str = "@TheDailyShow"
+    max_videos: int = 1
 
     try:
         logger.info("Initializing indexing service...")
