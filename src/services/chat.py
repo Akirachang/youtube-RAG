@@ -25,7 +25,7 @@ class ChatService(BaseService):
         super().__init__(settings)
 
         # Initialize embedder
-        if self.settings.openai_api_key:
+        if not self.settings.should_local_embed:
             self.embedder = OpenAIEmbedder(api_key=self.settings.openai_api_key)
         else:
             self.embedder = LocalEmbedder(model_name=self.settings.embedding_model)

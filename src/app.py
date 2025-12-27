@@ -33,7 +33,7 @@ def index_channel(channel_handle: str, max_videos: int = 50) -> str:
         stats = indexing_service.index_channel(channel_handle, max_videos=max_videos)
 
         message = f"""
-            ✅ Indexing Complete!
+            --- Indexing Complete! ---
 
             Channel: {stats["channel_name"]}
             Videos Indexed: {stats["videos_indexed"]}
