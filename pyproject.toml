@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
     "gradio>=4.0.0",
-    "youtube-transcript-api>=0.6.0",
+    "yt-dlp>=2023.0.0",
     "google-api-python-client>=2.0.0",
     "chromadb>=0.4.0",
     "openai>=1.0.0",

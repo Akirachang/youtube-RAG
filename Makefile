@@ -1,4 +1,4 @@
-.PHONY: help install setup clean run index test lint format
+.PHONY: help install setup clean run index inspect test lint format
 
 # Default Python interpreter
 PYTHON := python3
@@ -16,6 +16,7 @@ help:
 	@echo "Running:"
 	@echo "  make run            - Start the Gradio web interface"
 	@echo "  make index CHANNEL=@channelname  - Index a YouTube channel"
+	@echo "  make inspect        - Inspect indexed videos and channels"
 	@echo ""
 	@echo "Development:"
 	@echo "  make test           - Run tests"
@@ -68,6 +69,10 @@ index:
 	fi
 	@echo "Indexing channel: $(CHANNEL)"
 	$(BIN)/python scripts/seed_channel.py $(CHANNEL) $(if $(MAX_VIDEOS),--max-videos $(MAX_VIDEOS),)
+
+inspect:
+	@echo "Inspecting ChromaDB index..."
+	$(BIN)/python scripts/inspect_index.py
 
 lint:
 	@echo "Running linting checks..."
