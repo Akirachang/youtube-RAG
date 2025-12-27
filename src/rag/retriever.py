@@ -19,6 +19,7 @@ class SimpleRetriever(BaseRetriever):
             embedder: Embedder for query encoding
             vector_store: Vector store for similarity search
         """
+        
         self.embedder = embedder
         self.vector_store = vector_store
         self.settings = get_settings()
