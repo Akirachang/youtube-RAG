@@ -16,21 +16,26 @@ A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index
 
 </div>
 
-## Table of Contents
+## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
+- [📖 Overview](#-overview)
+- [✨ Features](#-features)
+- [🚀 Installation](#-installation)
+- [💻 Usage](#-usage)
+- [⚙️ Configuration](#️-configuration)
+- [📁 Project Structure](#-project-structure)
+- [🏗️ Architecture](#️-architecture)
+- [🔧 Troubleshooting](#-troubleshooting)
 
-## Overview
+## 📖 Overview
 
 YouTube RAG System enables you to build a searchable knowledge base from any YouTube channel. It fetches video transcripts, processes them into semantic chunks, stores them in a vector database, and provides an interactive chat interface where you can ask questions about the channel's content.
+
+### 💡 Inspiration
+
+This project was inspired by my interest in understanding how creators within the same YouTube niche think and differentiate themselves. The most valuable insights live in what creators say in their videos, not just in titles, descriptions, or metadata.
+
+However, current LLMs like OpenAI and Claude can’t reliably access or reason over spoken video content, making deep niche analysis difficult and incomplete. This limitation motivated the project, which is to enable meaningful exploration of creator niches through their actual narratives, rather than surface-level signals.
 
 **How it works:**
 
@@ -47,7 +52,7 @@ YouTube RAG System enables you to build a searchable knowledge base from any You
 - Build a searchable knowledge base for tutorial channels
 - Analyze content patterns across a creator's videos
 
-## Features
+## ✨ Features
 
 - **YouTube Integration**: Fetch channel videos and transcripts using YouTube Data API v3 and yt-dlp (reliable transcript extraction with auto-generated caption support)
 - **Vector Database**: Semantic search powered by ChromaDB
@@ -60,7 +65,7 @@ YouTube RAG System enables you to build a searchable knowledge base from any You
 - **VSCode Integration**: Pre-configured debug settings included
 - **CLI Tools**: Scripts for indexing, inspection, and testing
 
-## Installation
+## 🚀 Installation
 
 ### Prerequisites
 
@@ -133,7 +138,7 @@ make format        # Format code with black
 make lint          # Run linting checks
 ```
 
-## Usage
+## 💻 Usage
 
 ### Using the Web Interface
 
@@ -220,7 +225,7 @@ for source in result["sources"]:
     print(f"  https://www.youtube.com/watch?v={source['video_id']}")
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 The system is configured via environment variables in the `.env` file.
 
@@ -280,7 +285,7 @@ RETRIEVAL_K=5            # Number of similar chunks to retrieve
 LOG_LEVEL=INFO           # DEBUG, INFO, WARNING, ERROR
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 youtube-rag/
@@ -333,7 +338,7 @@ youtube-rag/
 └── README.md                    # This file
 ```
 
-## Architecture
+## 🏗️ Architecture
 
 The system follows a modular RAG (Retrieval-Augmented Generation) architecture:
 
@@ -414,7 +419,7 @@ The system follows a modular RAG (Retrieval-Augmented Generation) architecture:
 - **Error Handling**: Graceful handling of missing transcripts and API errors
 - **Caching**: Settings cached for performance
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Channel Not Found Error
 
