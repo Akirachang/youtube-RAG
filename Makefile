@@ -15,7 +15,7 @@ help:
 	@echo ""
 	@echo "Running:"
 	@echo "  make run            - Start the Gradio web interface"
-	@echo "  make index CHANNEL=@channelname  - Index a YouTube channel"
+	@echo "  make index [CHANNEL=@name] [MAX_VIDEOS=N] - Index a YouTube channel"
 	@echo "  make inspect        - Inspect indexed videos and channels"
 	@echo ""
 	@echo "Development:"
@@ -62,13 +62,8 @@ run:
 	$(BIN)/python -m src.app
 
 index:
-	@if [ -z "$(CHANNEL)" ]; then \
-		echo "Error: Please specify CHANNEL=@channelname"; \
-		echo "Example: make index CHANNEL=@veritasium"; \
-		exit 1; \
-	fi
-	@echo "Indexing channel: $(CHANNEL)"
-	$(BIN)/python scripts/seed_channel.py $(CHANNEL) $(if $(MAX_VIDEOS),--max-videos $(MAX_VIDEOS),)
+	@echo "Running indexing script..."
+	$(BIN)/python scripts/test_indexer.py $(if $(CHANNEL),$(CHANNEL),) $(if $(MAX_VIDEOS),--max-videos $(MAX_VIDEOS),)
 
 inspect:
 	@echo "Inspecting ChromaDB index..."
