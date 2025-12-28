@@ -17,11 +17,11 @@ A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index
 </div>
 
 <div align="center">
-  <video src="./public/assets/demo_video.mov" width="800" controls>
-    Your browser doesn't support video playback. <a href="./public/assets/demo_video.mov">Download the demo video</a>.
-  </video>
+
+https://github.com/Akirachang/youtube-RAG/tree/main/public/assets/demo_video.mov
 
   <p><em>See the YouTube RAG system in action: indexing channels and chatting with video content.</em></p>
+
 </div>
 
 ## 📋 Table of Contents
