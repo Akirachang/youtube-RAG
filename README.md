@@ -1,96 +1,129 @@
 # YouTube RAG System
 
-A Retrieval-Augmented Generation (RAG) system for YouTube channel content with a Gradio chat interface. Index any YouTube channel and chat with its content using AI.
+A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index any YouTube channel and chat with its videos using AI-powered semantic search.
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![yt-dlp](https://img.shields.io/badge/yt--dlp-transcript%20fetching-red.svg)](https://github.com/yt-dlp/yt-dlp)
+[![Gradio](https://img.shields.io/badge/Gradio-4.0+-orange.svg)](https://gradio.app/)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Store-green.svg)](https://www.trychroma.com/)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+
+---
+
+## Overview
+
+YouTube RAG System enables you to build a searchable knowledge base from any YouTube channel. It fetches video transcripts, processes them into semantic chunks, stores them in a vector database, and provides an interactive chat interface where you can ask questions about the channel's content.
+
+**How it works:**
+
+1. Provide a YouTube channel handle (e.g., `@mkbhd`)
+2. System fetches all videos and their transcripts using YouTube Data API v3 and yt-dlp
+3. Transcripts are chunked and embedded into a vector database (ChromaDB)
+4. Ask questions in natural language via a Gradio web interface
+5. Get AI-generated answers based on relevant video segments with source citations
+
+**Use cases:**
+
+- Research and summarize educational channels
+- Extract insights from tech review channels
+- Build a searchable knowledge base for tutorial channels
+- Analyze content patterns across a creator's videos
+
+---
 
 ## Features
 
-- **YouTube Integration**: Fetch channel videos and transcripts using YouTube Data API v3
-- **Vector Database**: Store embeddings in ChromaDB for semantic search
-- **Interactive UI**: Chat interface powered by Gradio
-- **Multiple LLM Providers**: Support for OpenAI (GPT-4) and Anthropic (Claude)
-- **Flexible Embeddings**: Choose between OpenAI embeddings or local sentence transformers
-- **Smart Chunking**: Recursive and sentence-based text splitting strategies
-- **Auto-skip**: Automatically skips videos without transcripts
-- **VSCode Integration**: Debug configurations included
+- **YouTube Integration**: Fetch channel videos and transcripts using YouTube Data API v3 and yt-dlp (reliable transcript extraction with auto-generated caption support)
+- **Vector Database**: Semantic search powered by ChromaDB
+- **Interactive UI**: Clean chat interface built with Gradio
+- **Multiple LLM Providers**: Support for OpenAI and Anthropic
+- **Flexible Embeddings**: Choose between OpenAI embeddings or local sentence transformers (free)
+- **Smart Chunking**: Recursive text splitting with configurable overlap for context preservation
+- **Auto-skip**: Automatically skips videos without available transcripts
+- **Source Citations**: Every answer includes links to the source videos
+- **VSCode Integration**: Pre-configured debug settings included
+- **CLI Tools**: Scripts for indexing, inspection, and testing
 
-## Prerequisites
+---
+
+## Installation
+
+### Prerequisites
 
 - Python 3.10 or higher
-- YouTube Data API v3 key ([Get one here](https://console.cloud.google.com/apis/credentials))
-- OpenAI API key (if using OpenAI for embeddings/LLM) or Anthropic API key (if using Claude)
+- [YouTube Data API v3 key](https://console.cloud.google.com/apis/credentials) (required)
+- OpenAI API key (if using OpenAI for embeddings/LLM) **OR** Anthropic API key (if using Claude)
 
-## Quick Start
+### Quick Start (Recommended)
 
-### Using Makefile (Recommended)
+Using the included Makefile for one-command setup:
 
 ```bash
-# One-command setup: creates venv, installs deps, creates .env
+# 1. Clone the repository
+git clone git@github.com:Akirachang/youtube-RAG.git
+cd youtube-rag
+
+# 2. Setup: creates venv, installs deps, creates .env
 make setup
 
-# Activate the virtual environment
+# 3. Activate virtual environment
 source venv/bin/activate
 
-# Edit .env with your API keys
+# 4. Edit .env with your API keys
 nano .env
+# Add your YOUTUBE_API_KEY and LLM provider keys
 
-# Index a YouTube channel
-make index CHANNEL=@veritasium
+# 5. Index a YouTube channel
+make index CHANNEL=@veritasium MAX_VIDEOS=50
 
-# Run the Gradio app
+# 6. Run the Gradio app
 make run
 ```
 
-### Manual Setup
+Open your browser to `http://localhost:7860` and start chatting!
 
-1. Create virtual environment:
+### Manual Installation
+
+If you prefer manual setup:
 
 ```bash
+# 1. Create virtual environment
 python3 -m venv venv
-source venv/bin/activate
-```
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-2. Install dependencies:
-
-```bash
+# 2. Install dependencies
 pip install -e .
-```
 
-3. Set up environment variables:
-
-```bash
+# 3. Set up environment variables
 cp .env.example .env
 # Edit .env with your API keys
-```
 
-4. Run the application:
-
-```bash
+# 4. Run the application
 python -m src.app
 ```
 
-## Project Structure
-
-```
-youtube-rag/
-├── src/
-│   ├── app.py              # Gradio UI entry point
-│   ├── youtube/            # YouTube data fetching
-│   ├── rag/                # RAG components
-│   ├── core/               # Core configuration
-│   └── services/           # Business logic
-├── data/                   # Data storage
-├── tests/                  # Test suite
-└── scripts/                # Utility scripts
-```
-
-## Available Make Commands
+### Available Make Commands
 
 ```bash
 make help          # Show all available commands
 make setup         # Complete setup (venv + deps + .env)
 make install       # Install/update dependencies
 make run           # Start Gradio web interface
-make index         # Index a channel (usage: make index CHANNEL=@name)
+make index         # Index a channel (usage: make index CHANNEL=@name MAX_VIDEOS=50)
+make inspect       # Inspect indexed videos and chunks
 make clean         # Remove temporary files
 make clean-data    # Remove vector database data only
 make clean-all     # Remove everything including venv
@@ -99,9 +132,100 @@ make format        # Format code with black
 make lint          # Run linting checks
 ```
 
+---
+
+## Usage
+
+### Using the Web Interface
+
+1. Start the Gradio app:
+
+   ```bash
+   make run
+   ```
+
+2. Open your browser to `http://localhost:7860`
+
+3. **Index a channel:**
+
+   - Go to the "Index Channel" tab
+   - Enter a channel handle (e.g., `@veritasium`, `@mkbhd`)
+   - Set max videos to index (default: 50)
+   - Click "Index Channel" and wait for completion
+
+4. **Chat with the content:**
+   - Go to the "Chat" tab
+   - Ask questions about the channel's videos
+   - Get AI-generated answers with source citations
+
+### Using the CLI
+
+Index a channel from the command line:
+
+```bash
+# Index with default settings (1 video from @TheDailyShow)
+make index
+
+# Index a specific channel
+make index CHANNEL=@veritasium
+
+# Index with more videos
+make index CHANNEL=@mkbhd MAX_VIDEOS=100
+
+# Or run the script directly
+python scripts/test_indexer.py @veritasium --max-videos 50
+
+# Clear and re-index
+python scripts/test_indexer.py @veritasium --clear --max-videos 50
+```
+
+Inspect indexed data:
+
+```bash
+# View indexed channels and videos
+make inspect
+
+# Or use the script directly
+python scripts/inspect_index.py
+```
+
+Test chat functionality:
+
+```bash
+# Interactive chat testing
+python scripts/test_chat.py
+```
+
+### Programmatic Usage
+
+Use the services in your own Python code:
+
+```python
+from src.services.indexing import IndexingService
+from src.services.chat import ChatService
+
+# Index a channel
+indexing = IndexingService()
+stats = indexing.index_channel("@veritasium", max_videos=50)
+print(f"Indexed {stats['videos_indexed']} videos")
+print(f"Created {stats['total_chunks']} chunks")
+
+# Query the system
+chat = ChatService()
+result = chat.ask("What topics does this channel cover?")
+print(result["answer"])
+
+# Access source videos
+for source in result["sources"]:
+    print(f"- {source['video_title']}")
+    print(f"  https://www.youtube.com/watch?v={source['video_id']}")
+```
+
+---
+
 ## Configuration
 
-Edit your `.env` file to configure the system:
+The system is configured via environment variables in the `.env` file.
 
 ### Required Settings
 
@@ -115,12 +239,12 @@ YOUTUBE_API_KEY=your_youtube_api_key_here
 Choose either OpenAI or Anthropic:
 
 ```bash
-# For OpenAI (GPT-4)
+# Option 1: OpenAI (GPT-4)
 LLM_PROVIDER=openai
 LLM_MODEL=gpt-4
 OPENAI_API_KEY=your_openai_key_here
 
-# OR for Anthropic (Claude)
+# Option 2: Anthropic (Claude)
 LLM_PROVIDER=anthropic
 LLM_MODEL=claude-3-5-sonnet-20241022
 ANTHROPIC_API_KEY=your_anthropic_key_here
@@ -131,14 +255,16 @@ ANTHROPIC_API_KEY=your_anthropic_key_here
 Choose between local embeddings (free, runs on CPU) or OpenAI embeddings (paid, higher quality):
 
 ```bash
-# Use local sentence transformers (free, no API key needed)
+# Option 1: Local sentence transformers (FREE)
 SHOULD_LOCAL_EMBED=true
 EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 
-# OR use OpenAI embeddings (requires OpenAI API key)
+# Option 2: OpenAI embeddings (requires API key)
 SHOULD_LOCAL_EMBED=false
 OPENAI_API_KEY=your_openai_key_here
 ```
+
+**Important:** If you switch between local and OpenAI embeddings, run `make clean-data` to clear the vector database, as they use different dimensions (384 vs 1536).
 
 ### Optional Settings
 
@@ -146,152 +272,213 @@ OPENAI_API_KEY=your_openai_key_here
 # Vector Database
 CHROMA_DB_PATH=./data/chroma_db
 
-# Chunking
-CHUNK_SIZE=1000
-CHUNK_OVERLAP=200
+# Text Chunking
+CHUNK_SIZE=1000          # Size of each text chunk
+CHUNK_OVERLAP=200        # Overlap between chunks for context
 
 # Retrieval
-RETRIEVAL_K=5
+RETRIEVAL_K=5            # Number of similar chunks to retrieve
 
 # Logging
-LOG_LEVEL=INFO
+LOG_LEVEL=INFO           # DEBUG, INFO, WARNING, ERROR
 ```
 
-## Usage Examples
+---
 
-### Using the Web Interface
-
-1. Start the Gradio app:
-
-```bash
-make run
-```
-
-2. Open your browser to `http://localhost:7860`
-3. Go to "Index Channel" tab and enter a channel handle
-4. Once indexed, use the "Chat" tab to ask questions
-
-### Using the CLI Script
-
-```bash
-# Index a channel with default settings (50 videos)
-make index CHANNEL=@veritasium
-
-# Index more videos
-python scripts/seed_channel.py @veritasium --max-videos 100
-
-# Clear and re-index
-python scripts/seed_channel.py @veritasium --clear
-```
-
-### Programmatic Usage
-
-```python
-from src.services.indexing import IndexingService
-from src.services.chat import ChatService
-
-# Index a channel
-indexing = IndexingService()
-stats = indexing.index_channel("@channelname", max_videos=50)
-print(f"Indexed {stats['videos_indexed']} videos")
-
-# Query the system
-chat = ChatService()
-result = chat.ask("What topics does this channel cover?")
-print(result["answer"])
-print(f"Sources: {result['sources']}")
-```
-
-## Troubleshooting
-
-### "Channel not found" Error
-
-Make sure you're using the correct channel handle format:
-
-- ✅ Correct: `@mkbhd` or `mkbhd`
-- ❌ Wrong: `https://www.youtube.com/@mkbhd` (don't use full URL)
-
-### "Transcript not available" for all videos
-
-Some channels disable transcripts. The system will skip these videos automatically. Check the stats:
-
-```
-Videos Indexed: 45   ← Successfully indexed
-Videos Skipped: 5    ← No transcripts available
-```
-
-### Config validation error with LLM_PROVIDER
-
-Make sure your `.env` file has NO inline comments:
-
-```bash
-# ❌ Wrong
-LLM_PROVIDER=openai  # this is a comment
-
-# ✅ Correct
-LLM_PROVIDER=openai
-```
-
-### Import errors when debugging
-
-Make sure `PYTHONPATH` is set correctly. The `.vscode/launch.json` already includes this, but if running manually:
-
-```bash
-export PYTHONPATH="${PWD}"
-python scripts/run.py
-```
-
-### Out of API quota
-
-- **YouTube API**: Free tier has 10,000 units/day. Each video fetch costs ~3-5 units.
-- **OpenAI API**: Check your billing at https://platform.openai.com/usage
-- **Anthropic API**: Check usage at https://console.anthropic.com
-
-## Project Structure Details
+## Project Structure
 
 ```
 youtube-rag/
 ├── src/
-│   ├── app.py                    # Gradio web interface
+│   ├── app.py                    # Gradio web interface entry point
 │   │
 │   ├── youtube/                  # YouTube API integration
 │   │   ├── base.py              # Abstract base class
-│   │   ├── client.py            # Main YouTube client
+│   │   ├── client.py            # Main YouTube API client
 │   │   ├── channel.py           # Channel lookup (handle → ID)
 │   │   ├── videos.py            # Fetch channel videos
-│   │   └── transcripts.py       # Fetch video transcripts
+│   │   └── transcripts.py       # Fetch video transcripts (yt-dlp)
 │   │
 │   ├── rag/                      # RAG pipeline components
 │   │   ├── base.py              # Abstract base classes
 │   │   ├── chunker.py           # Text chunking strategies
 │   │   ├── embeddings.py        # OpenAI & local embedders
 │   │   ├── vectorstore.py       # ChromaDB integration
-│   │   ├── retriever.py         # Document retrieval
+│   │   ├── retriever.py         # Semantic document retrieval
 │   │   └── generator.py         # LLM response generation
 │   │
 │   ├── core/                     # Core utilities
-│   │   ├── config.py            # Pydantic settings
+│   │   ├── config.py            # Pydantic settings management
 │   │   ├── exceptions.py        # Custom exceptions
-│   │   └── logging.py           # Logging setup
+│   │   └── logging.py           # Logging configuration
 │   │
-│   └── services/                 # Business logic
+│   └── services/                 # Business logic layer
 │       ├── base.py              # Base service class
-│       ├── indexing.py          # Channel indexing service
+│       ├── indexing.py          # Channel indexing orchestration
 │       └── chat.py              # Chat/query service
 │
 ├── scripts/
-│   └── seed_channel.py          # CLI indexing tool
+│   ├── test_indexer.py          # Test script for indexing
+│   ├── inspect_index.py         # View indexed data
+│   ├── test_chat.py             # Test chat functionality
+│   └── test_ytdlp_captions.py   # Test yt-dlp caption extraction
 │
 ├── data/
 │   ├── chroma_db/               # Vector database storage
 │   └── cache/                   # Cache directory
 │
 ├── tests/                        # Test suite
-├── .vscode/                      # VSCode configurations
-├── Makefile                      # Development commands
-└── pyproject.toml               # Dependencies
+│   ├── unit/                    # Unit tests
+│   └── integration/             # Integration tests
+│
+├── .vscode/                      # VSCode debug configurations
+├── Makefile                      # Development automation
+├── pyproject.toml               # Project dependencies
+├── .env.example                 # Environment template
+└── README.md                    # This file
 ```
 
-## License
+---
 
-MIT
+## Architecture
+
+The system follows a modular RAG (Retrieval-Augmented Generation) architecture:
+
+### Data Flow
+
+```
+1. Indexing Pipeline:
+   YouTube Channel → Fetch Videos → Extract Transcripts → Chunk Text →
+   Generate Embeddings → Store in Vector DB
+
+2. Query Pipeline:
+   User Question → Generate Query Embedding → Retrieve Similar Chunks →
+   Extract Context → Generate Answer with LLM → Return with Sources
+```
+
+### Component Breakdown
+
+#### 1. YouTube Integration (`src/youtube/`)
+
+- **ChannelFetcher**: Converts channel handles (`@veritasium`) to channel IDs
+- **VideosFetcher**: Retrieves all videos from a channel using YouTube Data API v3
+- **TranscriptFetcher**: Extracts video transcripts using yt-dlp (supports auto-generated captions)
+
+#### 2. RAG Pipeline (`src/rag/`)
+
+- **Chunker**: Splits long transcripts into overlapping chunks for better context
+
+  - Uses `RecursiveCharacterTextSplitter` from LangChain
+  - Configurable chunk size and overlap
+
+- **Embedder**: Converts text chunks into vector representations
+
+  - **LocalEmbedder**: Uses sentence-transformers (384 dimensions, free)
+  - **OpenAIEmbedder**: Uses OpenAI's embedding API (1536 dimensions, paid)
+
+- **VectorStore**: Manages the ChromaDB vector database
+
+  - Stores embeddings with metadata (video title, channel, timestamps)
+  - Supports similarity search and filtering
+
+- **Retriever**: Finds the most relevant chunks for a given query
+
+  - Embeds the user's question
+  - Performs semantic similarity search
+  - Returns top-k most relevant chunks
+
+- **Generator**: Creates natural language answers using LLMs
+  - **OpenAIGenerator**: Uses GPT-4 or GPT-3.5
+  - **AnthropicGenerator**: Uses Claude models
+  - Takes retrieved context and generates coherent responses
+
+#### 3. Services Layer (`src/services/`)
+
+- **IndexingService**: Orchestrates the entire indexing pipeline
+
+  - Fetches channel data
+  - Processes transcripts
+  - Stores in vector database
+  - Returns statistics
+
+- **ChatService**: Handles user queries
+  - Retrieves relevant context
+  - Generates answers with citations
+  - Returns formatted responses
+
+#### 4. Configuration (`src/core/`)
+
+- **Settings**: Pydantic-based configuration with validation
+  - Loads from `.env` file
+  - Type checking and defaults
+  - Singleton pattern with `@lru_cache`
+
+### Design Principles
+
+- **Modularity**: Each component has a single responsibility
+- **Extensibility**: Abstract base classes allow easy addition of new providers
+- **Type Safety**: Full type hints throughout the codebase
+- **Error Handling**: Graceful handling of missing transcripts and API errors
+- **Caching**: Settings cached for performance
+
+---
+
+## Troubleshooting
+
+### Channel Not Found Error
+
+Make sure you're using the correct format:
+
+- ✅ Correct: `@mkbhd` or `mkbhd`
+- ❌ Wrong: `https://www.youtube.com/@mkbhd` (don't include full URL)
+
+### No Transcripts Available
+
+Some channels disable transcripts or use languages other than English. The system automatically skips these videos. Check the indexing stats:
+
+```
+Videos Indexed: 45   ← Successfully indexed
+Videos Skipped: 5    ← No transcripts available
+```
+
+### Config Validation Error
+
+Make sure your `.env` file has **no inline comments**:
+
+```bash
+# ❌ Wrong - inline comments not supported
+LLM_PROVIDER=openai  # this is a comment
+
+# ✅ Correct - comments on separate lines
+# Choose your LLM provider
+LLM_PROVIDER=openai
+```
+
+### Embedding Dimension Mismatch
+
+Error: `Collection expecting embedding with dimension of 384, got 1536`
+
+This happens when you switch between local (384-dim) and OpenAI (1536-dim) embeddings. Fix:
+
+```bash
+# Clear the vector database
+make clean-data
+
+# Re-index with consistent settings
+make index CHANNEL=@yourchannel MAX_VIDEOS=50
+```
+
+### Import Errors in VSCode
+
+Make sure `PYTHONPATH` is set. The `.vscode/launch.json` includes this automatically, but if running manually:
+
+```bash
+export PYTHONPATH="${PWD}"
+python scripts/test_indexer.py
+```
+
+### API Quota Exceeded
+
+- **YouTube API**: Free tier = 10,000 units/day. Each video fetch costs ~3-5 units.
+- **OpenAI API**: Check billing at https://platform.openai.com/usage
+- **Anthropic API**: Check usage at https://console.anthropic.com
