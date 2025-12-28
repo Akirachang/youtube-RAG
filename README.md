@@ -18,7 +18,7 @@ A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index
 
 <div align="center">
 
-<video src="https://github.com/Akirachang/youtube-RAG/tree/main/public/assets/demo_video.mov" controls></video>
+<video src="public/assets/demo_video.mov" controls></video>
 
   <p><em>See the YouTube RAG system in action: indexing channels and chatting with video content.</em></p>
 
