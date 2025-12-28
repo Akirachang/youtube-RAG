@@ -1,13 +1,20 @@
+<div align="center">
+
 # YouTube RAG System
 
 A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index any YouTube channel and chat with its videos using AI-powered semantic search.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![YouTube Data API](https://img.shields.io/badge/YouTube-Data%20API%20v3-FF0000.svg)](https://developers.google.com/youtube/v3)
 [![yt-dlp](https://img.shields.io/badge/yt--dlp-transcript%20fetching-red.svg)](https://github.com/yt-dlp/yt-dlp)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063.svg)](https://docs.pydantic.dev/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-412991.svg)](https://openai.com/)
+[![Anthropic](https://img.shields.io/badge/Anthropic-Claude-191919.svg)](https://www.anthropic.com/)
+[![LangChain](https://img.shields.io/badge/LangChain-text%20splitters-1C3C3C.svg)](https://www.langchain.com/)
 [![Gradio](https://img.shields.io/badge/Gradio-4.0+-orange.svg)](https://gradio.app/)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Store-green.svg)](https://www.trychroma.com/)
 
----
+</div>
 
 ## Table of Contents
 
@@ -20,8 +27,6 @@ A Retrieval-Augmented Generation (RAG) system for YouTube channel content. Index
 - [Architecture](#architecture)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
-
----
 
 ## Overview
 
@@ -42,8 +47,6 @@ YouTube RAG System enables you to build a searchable knowledge base from any You
 - Build a searchable knowledge base for tutorial channels
 - Analyze content patterns across a creator's videos
 
----
-
 ## Features
 
 - **YouTube Integration**: Fetch channel videos and transcripts using YouTube Data API v3 and yt-dlp (reliable transcript extraction with auto-generated caption support)
@@ -56,8 +59,6 @@ YouTube RAG System enables you to build a searchable knowledge base from any You
 - **Source Citations**: Every answer includes links to the source videos
 - **VSCode Integration**: Pre-configured debug settings included
 - **CLI Tools**: Scripts for indexing, inspection, and testing
-
----
 
 ## Installation
 
@@ -131,8 +132,6 @@ make test          # Run tests
 make format        # Format code with black
 make lint          # Run linting checks
 ```
-
----
 
 ## Usage
 
@@ -221,8 +220,6 @@ for source in result["sources"]:
     print(f"  https://www.youtube.com/watch?v={source['video_id']}")
 ```
 
----
-
 ## Configuration
 
 The system is configured via environment variables in the `.env` file.
@@ -283,8 +280,6 @@ RETRIEVAL_K=5            # Number of similar chunks to retrieve
 LOG_LEVEL=INFO           # DEBUG, INFO, WARNING, ERROR
 ```
 
----
-
 ## Project Structure
 
 ```
@@ -337,8 +332,6 @@ youtube-rag/
 ├── .env.example                 # Environment template
 └── README.md                    # This file
 ```
-
----
 
 ## Architecture
 
@@ -420,8 +413,6 @@ The system follows a modular RAG (Retrieval-Augmented Generation) architecture:
 - **Type Safety**: Full type hints throughout the codebase
 - **Error Handling**: Graceful handling of missing transcripts and API errors
 - **Caching**: Settings cached for performance
-
----
 
 ## Troubleshooting
 
